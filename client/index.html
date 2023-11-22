@@ -1,10 +1,34 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Cool DBMS App</title>
-        <script src="/main.js"></script>
+        <title>Music Survey App</title>
+        <style type="text/css">
+            body {
+                margin: 40px auto;
+				max-width: 650px;
+				line-height: 1.6;
+				font-size: 18px;
+				color: #444;
+				padding: 0 10px;
+                background-color: #BBC;
+            }
+
+            h1, h2, h3 {
+                line-height:1.2
+            }
+        </style>
     </head>
     <body>
+        <h1>Music Survey</h1>
+        <hr>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <h2>Liked Music</h2>
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="search" required>
 
+        <!-- main script -->
+        <script src="/main.js"></script>
     </body>
 </html>
+

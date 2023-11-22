@@ -28,12 +28,16 @@ app.get("/search", (req, res) => {
 
   mb_api.search('release', {query}).then(
     search_result => {
-      res.header("Content-Type", "text/plain").send(JSON.stringify(search_result, null, 2));
+      res
+        .header("Content-Type", "text/json")
+        .send(JSON.stringify(search_result));
     },
 
-    err => {
-      res.header("Content-Type", "text/plain").send("something went wrong " + JSON.stringify(err, null, 2));
-
+    // TODO: send actual error content
+    _err => {
+      res
+        .header("Content-Type", "text/json")
+        .send("{}");
     }
   );
 })
