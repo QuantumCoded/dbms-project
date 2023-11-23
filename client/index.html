@@ -5,7 +5,7 @@
         <style type="text/css">
             body {
                 margin: 40px auto;
-				max-width: 650px;
+				max-width: 850px;
 				line-height: 1.6;
 				font-size: 18px;
 				color: #444;
@@ -15,6 +15,60 @@
 
             h1, h2, h3 {
                 line-height:1.2
+            }
+
+            .music-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: 10px;
+                grid-auto-flow: dense;
+            }
+
+            .music-search {
+                padding: 10px;
+                display: grid;
+                grid-template-columns: 100px 10px auto;
+                grid-template-rows: 0px 1fr 1fr 1fr 0px;
+                grid-gap: 5px;
+                grid-column: 1;
+                width: calc(100% - 20px);
+                height: 100px;
+                cursor: pointer;
+            }
+
+            .music-search:hover {
+                background-color: #0001
+            }
+            
+            .music-search > img {
+                height: 100%;
+                width: 100%;
+                grid-column: 1;
+                grid-row: span 5;
+            }
+
+            .music-search > span {
+                height: 26px;
+                font-size: auto;
+            }
+
+            .music-search > .title {
+                grid-column: 3;
+                grid-row: 2;
+            }
+
+            .music-search > .artist {
+                grid-column: 3;
+                grid-row: 3;
+            }
+
+            .music-search > .album {
+                grid-column: 3;
+                grid-row: 4;
+            }
+
+            .music-liked {
+                grid-column: 2;
             }
         </style>
     </head>
@@ -26,6 +80,24 @@
         <h2>Liked Music</h2>
         <label for="search">Search:</label>
         <input type="text" id="search" name="search" required>
+
+        <br><br>
+
+        <div class="music-container" width="100%">
+            <div class="music-search">
+                <img src="https://coverartarchive.org/release/1e2271ef-d58f-46f8-8289-b8d8f6a788cf/front-250" />
+                <span class="title">Track Name</span>
+                <span class="artist">Artist Name</span>
+                <span class="album">Album Name</span>
+            </div>
+            <div class="music-search">hello world</div>
+            <div class="music-search">hello world</div>
+            <div class="music-liked">seeya later</div>
+        </div>
+
+        <!--
+            `https://coverartarchive.org/release/${id}/front-250`
+        -->
 
         <!-- main script -->
         <script src="/main.js"></script>
