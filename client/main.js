@@ -5,7 +5,7 @@ const mb_search = document.getElementById("search");
 
 mb_search.addEventListener("input", () => {
   clearTimeout(typingTimer);
-  typingTimer = setTimeout(run_mb_search(mb_search.value), 100);
+  typingTimer = setTimeout(run_mb_search(mb_search.value), 250);
 });
 
 async function run_mb_search(query) {
