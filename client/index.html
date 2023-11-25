@@ -73,6 +73,24 @@
         </style>
     </head>
     <body>
+        <template id="search-template">
+            <div class="music-search">
+                <img/>
+                <span class="title"></span>
+                <span class="artist"></span>
+                <span class="album"></span>
+            </div>
+        </template>
+
+        <template id="liked-template">
+            <div class="music-liked">
+                <img/>
+                <span class="title"></span>
+                <span class="artist"></span>
+                <span class="album"></span>
+            </div>
+        </template>
+
         <h1>Music Survey</h1>
         <hr>
         <label for="username">Username:</label>
@@ -83,16 +101,7 @@
 
         <br><br>
 
-        <div class="music-container" width="100%">
-            <div class="music-search">
-                <img src="https://coverartarchive.org/release/1e2271ef-d58f-46f8-8289-b8d8f6a788cf/front-250" />
-                <span class="title">Track Name</span>
-                <span class="artist">Artist Name</span>
-                <span class="album">Album Name</span>
-            </div>
-            <div class="music-search">hello world</div>
-            <div class="music-search">hello world</div>
-            <div class="music-liked">seeya later</div>
+        <div id="music-container" class="music-container" width="100%">
         </div>
 
         <!--
