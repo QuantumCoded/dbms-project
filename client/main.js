@@ -2,7 +2,6 @@ console.log("main script loaded!");
 
 let music_container = document.getElementById("music-container");
 let search_template = document.getElementById("search-template");
-let liked_template = document.getElementById("liked-template");
 
 const mb_search = document.getElementById("search");
 const liked_tracks = new Set();

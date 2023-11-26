@@ -85,33 +85,30 @@
             </div>
         </template>
 
-        <template id="liked-template">
-            <div class="music-liked">
-                <img/>
-                <span class="title"></span>
-                <span class="artist"></span>
-                <span class="album"></span>
-            </div>
-        </template>
-
         <h1>Music Survey</h1>
+
         <hr>
+        <p>
+            Search for a song using the search bar and click it to add it to your favorites.
+            When you are done selecting songs press the submit button to add your picks to the
+            database. You can also use the "I'm Feeling Lucky" button to see random songs submitted
+            by other users.
+        </p>
+        <hr>
+
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
-        <h2>Liked Music</h2>
+        <input id ="random" type="button" value="I'm Feeling Lucky">
+
+        <br>
+
         <label for="search">Search:</label>
         <input type="text" id="search" name="search" required>
-
-        <br><br>
+        <input id ="submit" type="button" value="Submit!">
 
         <div id="music-container" class="music-container" width="100%">
         </div>
 
-        <!--
-            `https://coverartarchive.org/release/${id}/front-250`
-        -->
-
-        <!-- main script -->
         <script src="/main.js"></script>
     </body>
 </html>
