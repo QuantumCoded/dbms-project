@@ -5,6 +5,7 @@ let search_template = document.getElementById("search-template");
 let liked_template = document.getElementById("liked-template");
 
 const mb_search = document.getElementById("search");
+const liked_tracks = new Set();
 
 function debounce(func, timeout = 300) {
   let typing_timer;
@@ -15,6 +16,17 @@ function debounce(func, timeout = 300) {
 }
 
 mb_search.addEventListener("input", debounce(() => run_mb_search(mb_search.value)));
+
+function toggle_liked(node) {
+  console.log(`toggling node with class: ${node.className}`);
+  if (node.className == "music-search") {
+    liked_tracks.add(node.id);
+    node.className = "music-liked";
+  } else {
+    liked_tracks.delete(node.id);
+    node.className = "music-search";
+  }
+}
 
 async function run_mb_search(query) {
   console.log(`running search: "${query}"`);
@@ -47,5 +59,7 @@ async function run_mb_search(query) {
     img_node.src = image;
 
     music_container.appendChild(node);
+
+    search_node.addEventListener("click", () => toggle_liked(search_node));
   }
 }

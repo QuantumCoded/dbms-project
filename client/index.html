@@ -24,47 +24,50 @@
                 grid-auto-flow: dense;
             }
 
-            .music-search {
+            .music-search, .music-liked {
                 padding: 10px;
                 display: grid;
                 grid-template-columns: 100px 10px auto;
                 grid-template-rows: 0px 1fr 1fr 1fr 0px;
                 grid-gap: 5px;
-                grid-column: 1;
                 width: calc(100% - 20px);
                 height: 100px;
                 cursor: pointer;
             }
 
-            .music-search:hover {
+            .music-search:hover, .music-liked:hover {
                 background-color: #0001
             }
             
-            .music-search > img {
+            .music-search > img, .music-liked > img {
                 height: 100%;
                 width: 100%;
                 grid-column: 1;
                 grid-row: span 5;
             }
 
-            .music-search > span {
+            .music-search > span, .music-liked > span {
                 height: 26px;
                 font-size: auto;
             }
 
-            .music-search > .title {
+            .music-search > .title, .music-liked > .title {
                 grid-column: 3;
                 grid-row: 2;
             }
 
-            .music-search > .artist {
+            .music-search > .artist, .music-liked > .artist {
                 grid-column: 3;
                 grid-row: 3;
             }
 
-            .music-search > .album {
+            .music-search > .album, .music-liked > .album {
                 grid-column: 3;
                 grid-row: 4;
+            }
+
+            .music-search {
+                grid-column: 1;
             }
 
             .music-liked {

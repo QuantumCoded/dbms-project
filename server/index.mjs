@@ -24,6 +24,10 @@ app.get("/", (_req, res) => {
 app.get("/search", (req, res) => {
   let query = req.query.q;
 
+  // TODO: change method to post and make the query a JSON
+  // object with a query and liked field to do the filtering
+  // for likes on the server side
+
   // TODO: if the query is empty don't query musicbrainz
 
   console.log("querying musicbrainz:", JSON.stringify(query));
