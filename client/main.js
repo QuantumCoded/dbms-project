@@ -29,7 +29,14 @@ function toggle_liked(node) {
 
 async function run_mb_search(query) {
   console.log(`running search: "${query}"`);
-  let search_result = await (await fetch(`/search?q=${query}`)).json();
+  let search_result = await (await fetch(
+      `/search?q=${query}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filter: Array.from(liked_tracks) })
+      },
+    )).json();
   
   console.log(search_result);
 

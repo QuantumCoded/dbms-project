@@ -6,6 +6,9 @@ import {fileURLToPath} from 'url';
 const app = express();
 const port = 3000;
 
+// allow express to parse JSON HTTP POST requests
+app.use(express.json());
+
 const mb_api = new MusicBrainzApi({
   appName: "dbms-project",
   appVersion: "1.0.0",
@@ -21,43 +24,39 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(root_dir, "index.html"));
 });
 
-app.get("/search", (req, res) => {
+function search(req, res, filter = []) {
   let query = req.query.q;
 
-  // TODO: change method to post and make the query a JSON
-  // object with a query and liked field to do the filtering
-  // for likes on the server side
+  // ignore empty search queries
+  if (!query || query.trim().length == 0) {
+    res
+      .header("Content-Type", "application/json")
+      .send("[]");
 
-  // TODO: if the query is empty don't query musicbrainz
+    return;
+  }
 
   console.log("querying musicbrainz:", JSON.stringify(query));
 
   mb_api.search('release', {query}).then(
     search_result => {
+      let results = search_result.releases
+        .map(result => {
+          let response = {
+            id: result.id,
+            track: result.title,
+            artist: result["artist-credit"][0].name,
+            album: result["release-group"].title,
+            image: `https://coverartarchive.org/release/${result.id}/front-250`,
+          };
 
-      let results = search_result.releases.map(async result => {
-        let response = {
-          id: result.id,
-          track: result.title,
-          artist: result["artist-credit"][0].name,
-          album: result["release-group"].title,
-          image: `https://coverartarchive.org/release/${result.id}/front-250`,
-        };
-
-        return response;
-      });
-
-      Promise.all(results).then(data => {
-        res
-          .header("Content-Type", "text/json")
-          .send(JSON.stringify(data));
-      }).catch(e => {
-        console.log("error packing results", e);
+          return response;
+        })
+        .filter(track => !filter.includes(track.id))
 
         res
           .header("Content-Type", "text/json")
-          .send("[]");
-      });
+          .send(JSON.stringify(results));
     },
 
     // TODO: send actual error content
@@ -68,7 +67,10 @@ app.get("/search", (req, res) => {
         .send("[]");
     }
   );
-})
+}
+
+app.get("/search", (req, res) => search(req, res));
+app.post("/search", (req, res) => search(req, res, req.body.filter));
 
 app.get("/main.js", (_req, res) => {
   res.sendFile(path.join(root_dir, "main.js"));
