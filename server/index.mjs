@@ -55,7 +55,7 @@ function search(req, res, filter = []) {
         .filter(track => !filter.includes(track.id))
 
         res
-          .header("Content-Type", "text/json")
+          .header("Content-Type", "application/json")
           .send(JSON.stringify(results));
     },
 
@@ -63,7 +63,7 @@ function search(req, res, filter = []) {
     _err => {
       console.log("error making musicbrainz call");
       res
-        .header("Content-Type", "text/json")
+        .header("Content-Type", "application/json")
         .send("[]");
     }
   );
