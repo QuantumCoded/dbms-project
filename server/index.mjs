@@ -1,27 +1,20 @@
 import express from "express";
 import {MusicBrainzApi} from "musicbrainz-api";
 import path from "path";
+import {open} from "sqlite";
+import sqlite3 from "sqlite3";
 import {fileURLToPath} from 'url';
-
-const app = express();
-const port = 3000;
-
-// allow express to parse JSON HTTP POST requests
-app.use(express.json());
-
-const mb_api = new MusicBrainzApi({
-  appName: "dbms-project",
-  appVersion: "1.0.0",
-  appContactInfo: "null@void.com",
-});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const root_dir = path.join(__dirname, "../client");
+const db_file = path.join(__dirname, "../music.db");
 
-app.get("/", (_req, res) => {
-  res.sendFile(path.join(root_dir, "index.html"));
+const mb_api = new MusicBrainzApi({
+  appName: "dbms-project",
+  appVersion: "1.0.0",
+  appContactInfo: "null@void.com",
 });
 
 function search(req, res, filter = []) {
@@ -69,13 +62,40 @@ function search(req, res, filter = []) {
   );
 }
 
-app.get("/search", (req, res) => search(req, res));
-app.post("/search", (req, res) => search(req, res, req.body.filter));
+(async () => {
+  const db = await open({
+    filename: db_file,
+    driver: sqlite3.Database
+  });
 
-app.get("/main.js", (_req, res) => {
-  res.sendFile(path.join(root_dir, "main.js"));
-});
+  console.log("Sqlite database connection opened");
 
-app.listen(port, () => {
-  console.log(`Server started and listening on port ${port}`);
-});
+  // clean up the database when closing
+  [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((eventType) => {
+    process.on(eventType, () => db.close().then(() => process.exit()));
+  });
+
+  const app = express();
+  const port = 3000;
+
+  // allow express to parse JSON HTTP POST requests
+  app.use(express.json());
+
+  app.get("/", (_req, res) => res.sendFile(path.join(root_dir, "index.html")));
+  app.get("/main.js", (_req, res) => res.sendFile(path.join(root_dir, "main.js")));
+
+  app.get("/search", (req, res) => search(req, res));
+  app.post("/search", (req, res) => search(req, res, req.body.filter));
+
+  app.post("/favorites", (req, res) => {
+    let favorites = req.body || [];
+
+    console.log(favorites);
+  });
+
+  app.get("/random", (req, res) => {
+  });
+
+
+  app.listen(port, () => console.log(`Server started and listening on port ${port}`));
+})()
