@@ -16,6 +16,7 @@
         nativeBuildInputs = with pkgs; [
           nodejs
           nodePackages.nodemon
+          sqlite
         ];
       };
     };
