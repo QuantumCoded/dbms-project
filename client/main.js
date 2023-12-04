@@ -1,10 +1,13 @@
 console.log("main script loaded!");
 
-let music_container = document.getElementById("music-container");
-let search_template = document.getElementById("search-template");
+const music_container = document.getElementById("music-container");
+const search_template = document.getElementById("search-template");
+const random_button = document.getElementById("random");
+const submit_button = document.getElementById("submit");
+const username = document.getElementById("username");
 
 const mb_search = document.getElementById("search");
-const liked_tracks = new Set();
+const liked_tracks = { user: null, tracks: {} };
 
 function debounce(func, timeout = 300) {
   let typing_timer;
@@ -15,26 +18,57 @@ function debounce(func, timeout = 300) {
 }
 
 mb_search.addEventListener("input", debounce(() => run_mb_search(mb_search.value)));
+submit_button.addEventListener("click", event => {
+  if (event.button == 0) {
+    liked_tracks.user = username.value || null;
+
+    if (!liked_tracks.user) {
+      alert("a username is required");
+      return;
+    }
+
+    alert("submitting favorites");
+
+    fetch(
+      "/favorites",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(liked_tracks),
+      }
+    );
+
+    // TODO: clean up the page a bit
+  }
+})
 
 function toggle_liked(node) {
   console.log(`toggling node with class: ${node.className}`);
   if (node.className == "music-search") {
-    liked_tracks.add(node.id);
+    let title = node.querySelector(".title").innerHTML;
+    let artist = node.querySelector(".artist").innerHTML;
+    let album = node.querySelector(".album").innerHTML;
+
+    liked_tracks.tracks[node.id] = { title, artist, album };
+
     node.className = "music-liked";
   } else {
-    liked_tracks.delete(node.id);
+    delete liked_tracks[node.id];
     node.className = "music-search";
   }
 }
 
 async function run_mb_search(query) {
   console.log(`running search: "${query}"`);
+
   let search_result = await (await fetch(
       `/search?q=${query}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filter: Array.from(liked_tracks) })
+        body: JSON.stringify({
+          filter: Object.keys(liked_tracks.tracks)
+        })
       },
     )).json();
   
@@ -44,14 +78,10 @@ async function run_mb_search(query) {
   music_container.querySelectorAll(".music-search").forEach(elem => elem.remove());
 
   for (result of search_result) {
-    console.log(result);
-
     let { id, track, artist, album, image } = result;
 
-    console.log(id, track, artist, album, image);
-    
     let node = search_template.content.cloneNode(true);
-    
+
     let search_node = node.querySelector("div");
     let title_node = node.querySelector(".title");
     let artist_node = node.querySelector(".artist");
