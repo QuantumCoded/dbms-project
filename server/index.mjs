@@ -70,8 +70,34 @@ function search(req, res, filter = []) {
 
   console.log("Sqlite database connection opened");
 
+  await db.run(`
+    CREATE TABLE IF NOT EXISTS user (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username STRING NOT NULL UNIQUE
+    );
+  `);
+
+  await db.run(`
+    CREATE TABLE IF NOT EXISTS track (
+      mbid STRING PRIMARY KEY,
+      title STRING NOT NULL,
+      artist STRING NOT NULL,
+      album STRING NOT NULL
+    );
+  `);
+
+  await db.run(`
+    CREATE TABLE IF NOT EXISTS favorite (
+      user_id INTEGER NOT NULL UNIQUE,
+      mbid STRING NOT NULL UNIQUE,
+      PRIMARY KEY (user_id, mbid)
+    );
+  `);
+
+  console.log("finished database migrations");
+
   // clean up the database when closing
-  [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((eventType) => {
+  ["exit", "SIGINT", "SIGUSR1", "SIGUSR2", "uncaughtException", "SIGTERM"].forEach((eventType) => {
     process.on(eventType, () => db.close().then(() => process.exit()));
   });
 
@@ -88,7 +114,7 @@ function search(req, res, filter = []) {
   app.post("/search", (req, res) => search(req, res, req.body.filter));
 
   app.post("/favorites", (req, res) => {
-    let favorites = req.body || [];
+    let favorites = req.body || {}; 
 
     console.log(favorites);
   });
