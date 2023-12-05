@@ -18,7 +18,7 @@ function debounce(func, timeout = 300) {
 }
 
 mb_search.addEventListener("input", debounce(() => run_mb_search(mb_search.value)));
-submit_button.addEventListener("click", event => {
+submit_button.addEventListener("click", async event => {
   if (event.button == 0) {
     liked_tracks.user = username.value || null;
 
@@ -27,9 +27,7 @@ submit_button.addEventListener("click", event => {
       return;
     }
 
-    alert("submitting favorites");
-
-    fetch(
+    await fetch(
       "/favorites",
       {
         method: "POST",
@@ -37,6 +35,8 @@ submit_button.addEventListener("click", event => {
         body: JSON.stringify(liked_tracks),
       }
     );
+
+    alert("favorites have been submitted");
 
     // TODO: clean up the page a bit
   }
