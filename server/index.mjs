@@ -113,6 +113,8 @@ function search(req, res, filter = []) {
     let favorites = req.body || {}; 
 
     console.log(favorites);
+
+    res.end()
   });
 
   app.get("/random", (req, res) => {
