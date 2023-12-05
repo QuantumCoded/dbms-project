@@ -38,7 +38,11 @@ submit_button.addEventListener("click", async event => {
 
     alert("favorites have been submitted");
 
-    // TODO: clean up the page a bit
+    music_container.innerHTML = "";
+    liked_tracks.user = null;
+    liked_tracks.tracks = {};
+    username.value = "";
+    mb_search.value = "";
   }
 })
 
