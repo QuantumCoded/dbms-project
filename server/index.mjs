@@ -151,7 +151,7 @@ function search(req, res, filter = []) {
 
   app.get("/random", async (_req, res) => {
     let tracks = await db.all(`
-      SELECT username, title, artist, album
+      SELECT username, title, artist, album, track.mbid
       FROM
         user
         JOIN favorite ON user.id = favorite.user_id

@@ -42,6 +42,18 @@ submit_button.addEventListener("click", async event => {
   }
 });
 
+random_button.addEventListener("click", async event => {
+  if (event.button == 0) {
+    let random = await (await fetch("/random")).json();
+
+    cleanup();
+
+    for (track of random) {
+      add_result(track.mbid, track.title, track.artist, track.album, false);
+    }
+  }
+});
+
 function cleanup() {
   music_container.innerHTML = "";
   liked_tracks.user = null;
@@ -66,6 +78,26 @@ function toggle_liked(node) {
   }
 }
 
+function add_result(id, track, artist, album, clickable = true) {
+  let node = search_template.content.cloneNode(true);
+
+  let search_node = node.querySelector("div");
+  let title_node = node.querySelector(".title");
+  let artist_node = node.querySelector(".artist");
+  let album_node = node.querySelector(".album");
+  let img_node = node.querySelector("img");
+
+  search_node.id = id;
+  title_node.innerHTML = track;
+  artist_node.innerHTML = artist;
+  album_node.innerHTML = album;
+  img_node.src = `https://coverartarchive.org/release/${id}/front-250`;
+
+  music_container.appendChild(node);
+
+  if (clickable) search_node.addEventListener("click", () => toggle_liked(search_node));
+}
+
 async function run_mb_search(query) {
   console.log(`running search: "${query}"`);
 
@@ -88,22 +120,6 @@ async function run_mb_search(query) {
   for (result of search_result) {
     let { id, track, artist, album } = result;
 
-    let node = search_template.content.cloneNode(true);
-
-    let search_node = node.querySelector("div");
-    let title_node = node.querySelector(".title");
-    let artist_node = node.querySelector(".artist");
-    let album_node = node.querySelector(".album");
-    let img_node = node.querySelector("img");
-
-    search_node.id = id;
-    title_node.innerHTML = track;
-    artist_node.innerHTML = artist;
-    album_node.innerHTML = album;
-    img_node.src = `https://coverartarchive.org/release/${id}/front-250`;
-
-    music_container.appendChild(node);
-
-    search_node.addEventListener("click", () => toggle_liked(search_node));
+    add_result(id, track, artist, album);
   }
 }
