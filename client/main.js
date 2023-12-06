@@ -38,13 +38,17 @@ submit_button.addEventListener("click", async event => {
 
     alert("favorites have been submitted");
 
-    music_container.innerHTML = "";
-    liked_tracks.user = null;
-    liked_tracks.tracks = {};
-    username.value = "";
-    mb_search.value = "";
+    cleanup();
   }
-})
+});
+
+function cleanup() {
+  music_container.innerHTML = "";
+  liked_tracks.user = null;
+  liked_tracks.tracks = {};
+  username.value = "";
+  mb_search.value = "";
+}
 
 function toggle_liked(node) {
   console.log(`toggling node with class: ${node.className}`);
