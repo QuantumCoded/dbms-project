@@ -86,7 +86,7 @@ async function run_mb_search(query) {
   music_container.querySelectorAll(".music-search").forEach(elem => elem.remove());
 
   for (result of search_result) {
-    let { id, track, artist, album, image } = result;
+    let { id, track, artist, album } = result;
 
     let node = search_template.content.cloneNode(true);
 
@@ -100,7 +100,7 @@ async function run_mb_search(query) {
     title_node.innerHTML = track;
     artist_node.innerHTML = artist;
     album_node.innerHTML = album;
-    img_node.src = image;
+    img_node.src = `https://coverartarchive.org/release/${id}/front-250`;
 
     music_container.appendChild(node);
 

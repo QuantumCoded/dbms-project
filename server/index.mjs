@@ -40,7 +40,6 @@ function search(req, res, filter = []) {
             track: result.title,
             artist: result["artist-credit"][0].name,
             album: result["release-group"].title,
-            image: `https://coverartarchive.org/release/${result.id}/front-250`,
           };
 
           return response;
