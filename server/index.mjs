@@ -113,10 +113,39 @@ function search(req, res, filter = []) {
   app.get("/search", (req, res) => search(req, res));
   app.post("/search", (req, res) => search(req, res, req.body.filter));
 
-  app.post("/favorites", (req, res) => {
-    let favorites = req.body || {}; 
+  app.post("/favorites", async (req, res) => {
+    let { user, tracks } = req.body || {};
 
-    console.log(favorites);
+    console.log({ user, tracks });
+
+    let user_id = (await db.run(
+      `INSERT OR IGNORE INTO user (username) VALUES (?);`,
+      [ user ]
+    )).lastID;
+
+    let queries = Object.entries(tracks).map(async entry => {
+      let { title, artist, album } = entry.pop();
+      let track_id = entry.pop();
+
+
+      console.log("query 1");
+      console.log(user_id, track_id, title, artist, album);
+
+      await db.run(
+        `INSERT OR IGNORE INTO track (mbid, title, artist, album) VALUES (?, ?, ?, ?);`,
+        [ track_id, title, artist, album ]
+      );
+
+      console.log("query 2");
+      console.log(user_id, track_id);
+
+      await db.run(
+        `INSERT INTO favorite (mbid, user_id) VALUES (?, ?);`,
+        [ track_id, user_id ]
+      );
+    });
+
+    await Promise.all(queries);
 
     res.end()
   });
