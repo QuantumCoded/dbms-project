@@ -88,8 +88,8 @@ function search(req, res, filter = []) {
 
   await db.run(`
     CREATE TABLE IF NOT EXISTS favorite (
-      user_id INTEGER NOT NULL UNIQUE,
-      mbid STRING NOT NULL UNIQUE,
+      user_id INTEGER NOT NULL,
+      mbid STRING NOT NULL,
       PRIMARY KEY (user_id, mbid)
     );
   `);
