@@ -150,7 +150,18 @@ function search(req, res, filter = []) {
     res.end()
   });
 
-  app.get("/random", (req, res) => {
+  app.get("/random", async (_req, res) => {
+    let tracks = await db.all(`
+      SELECT username, title, artist, album
+      FROM
+        user
+        JOIN favorite ON user.id = favorite.user_id
+        JOIN track ON favorite.mbid = track.mbid
+      ORDER BY RANDOM()
+      LIMIT 5;
+    `);
+
+    res.end(JSON.stringify(tracks));
   });
 
 
