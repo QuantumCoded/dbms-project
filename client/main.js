@@ -49,7 +49,13 @@ random_button.addEventListener("click", async event => {
     cleanup();
 
     for (track of random) {
-      add_result(track.mbid, track.title, track.artist, track.album, false);
+      // HACK: trying to alert ${track.username} prints the same name for all tracks
+      // setting username = track.username and alerting username is correct for all tracks
+      let username = track.username;
+
+      add_result(track.mbid, track.title, track.artist, track.album, () => {
+        alert(`This track was favorited by ${username}.`);
+      });
     }
   }
 });
@@ -78,7 +84,7 @@ function toggle_liked(node) {
   }
 }
 
-function add_result(id, track, artist, album, clickable = true) {
+function add_result(id, track, artist, album, onclick) {
   let node = search_template.content.cloneNode(true);
 
   let search_node = node.querySelector("div");
@@ -95,7 +101,17 @@ function add_result(id, track, artist, album, clickable = true) {
 
   music_container.appendChild(node);
 
-  if (clickable) search_node.addEventListener("click", () => toggle_liked(search_node));
+  const context = {
+    search_node,
+    title_node,
+    artist_node,
+    album_node,
+    img_node,
+  };
+
+  if (onclick) search_node.addEventListener("click", event => {
+    if (event.button == 0) onclick(context);
+  });
 }
 
 async function run_mb_search(query) {
@@ -120,6 +136,8 @@ async function run_mb_search(query) {
   for (result of search_result) {
     let { id, track, artist, album } = result;
 
-    add_result(id, track, artist, album);
+    add_result(id, track, artist, album, context => {
+      toggle_liked(context.search_node);
+    });
   }
 }
